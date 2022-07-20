@@ -63,7 +63,7 @@ const CommentForm = ({ createComment, flights , users }) => {
       autoComplete="off"
       onSubmit={formik.handleSubmit}
     >
-      <FormControl sx={{ m: 1, width: '70%' }} size="small">
+      <FormControl sx={{ m: 1, width: '80%' }} size="small">
         <InputLabel id="select-flight-label">Flight</InputLabel>
         <Select
           inputProps={{ 'data-testid': 'flight-field' }}
@@ -78,12 +78,12 @@ const CommentForm = ({ createComment, flights , users }) => {
           error={formik.touched.flight && Boolean(formik.errors.flight)}
         >
           {flights.map(flight => (
-            <MenuItem key={flight.id} value={flight.id}>{flight.flightNo} - {flight.airline}</MenuItem>
+            <MenuItem key={flight.id} id={flight.id} value={flight.id}>{flight.flightNo} - {flight.airline}</MenuItem>
           ))}
         </Select>
         <FormHelperText id="select-flight-helper-text">{formik.touched.flight && formik.errors.flight}</FormHelperText>
       </FormControl>
-      <FormControl sx={{ m: 1, width: '70%' }} size="small">
+      <FormControl sx={{ m: 1, width: '80%' }} size="small">
         <InputLabel id="select-user-label">User</InputLabel>
         <Select
           inputProps={{ 'data-testid': 'user-field' }}
@@ -98,12 +98,12 @@ const CommentForm = ({ createComment, flights , users }) => {
           error={formik.touched.user && Boolean(formik.errors.user)}
         >
           {users.map(user => (
-            <MenuItem key={user.id} value={user.id}>{user.name} {user.surname}</MenuItem>
+            <MenuItem key={user.id} id={user.id} value={user.id}>{user.name} {user.surname}</MenuItem>
           ))}
         </Select>
         <FormHelperText id="select-user-helper-text">{formik.touched.user && formik.errors.user}</FormHelperText>
       </FormControl>
-      <FormControl sx={{ m: 1, width: '70%' }} size="small">
+      <FormControl sx={{ m: 1, width: '80%' }} size="small">
         <InputLabel htmlFor="comment-field">Comment</InputLabel>
         <OutlinedInput
           inputProps={{ 'data-testid': 'comment-field' }}
@@ -121,7 +121,7 @@ const CommentForm = ({ createComment, flights , users }) => {
         />
         <FormHelperText id="comment-field">{formik.touched.comment && formik.errors.comment}</FormHelperText>
       </FormControl>
-      <FormControl sx={{ m: 1, width: '70%' }} size="small">
+      <FormControl sx={{ m: 1, width: '80%' }} size="small">
         <InputLabel htmlFor="tags-field">Tags</InputLabel>
         <OutlinedInput
           id="tags-field"
@@ -145,7 +145,7 @@ const CommentForm = ({ createComment, flights , users }) => {
         />
         <FormHelperText id="tags-field-helper-text">{tags.join(' ')}</FormHelperText>
       </FormControl>
-      <Button fullWidth className="mb-3" id='add-comment-button' type="submit" variant="contained" size="sm" data-testid="comment-submit">Save</Button>
+      <Button className="mb-3" id='add-comment-button' type="submit" variant="contained" size="sm" data-testid="comment-submit">Save</Button>
     </Box>
   )
 }

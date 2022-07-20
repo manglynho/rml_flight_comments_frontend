@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 
 import { setNotification } from './reducers/notificationReducer'
-import { initializeComments } from './reducers/commentReducer'
-import { useDispatch, useSelector } from 'react-redux'
+import { initializeComments, resetComments } from './reducers/commentReducer'
+import { useDispatch } from 'react-redux'
 
 import commentService from './services/comments'
 import userService from './services/users'
@@ -54,19 +54,20 @@ const App = () => {
 
   const [users, setUsers] = useState([])
   const [flights, setFlights] = useState([])
-  const [selectedFlight, setSelectedFlight] = useState(null)
+  const [selectedFlight, setSelectedFlight] = useState('')
   const dispatch = useDispatch()
-  const commentsStore = useSelector(state => state.comments)
 
   const changeTheme = () => {
     setIsDarkTheme(!isDarkTheme)
   }
 
   useEffect(() => {
+    dispatch(resetComments())
     dispatch(initializeComments(selectedFlight))
   },[dispatch])
 
   useEffect(() => {
+    dispatch(resetComments())
     dispatch(initializeComments(selectedFlight))
   },[selectedFlight])
 
@@ -90,6 +91,7 @@ const App = () => {
     try {
       const returnedComment = await commentService
         .create(commentObject)
+      dispatch(resetComments())
       dispatch(initializeComments(selectedFlight))
       dispatch(setNotification(`A new comment ${returnedComment.id} added`, 3000, 'success'))
       return true
@@ -130,12 +132,12 @@ const App = () => {
                     <Typography>Select a flight</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <FormControl sx={{ m: 1, width: '70%' }} size="small">
+                    <FormControl sx={{ m: 1, width: '80%' }} size="small">
                       <InputLabel id="select-flight-label">Flight</InputLabel>
                       <Select
                         labelId="select-flight-label"
                         required
-                        id="flight-field"
+                        id="flight-field-for-table"
                         value={selectedFlight}
                         name="flight"
                         label="Flight"
@@ -166,7 +168,7 @@ const App = () => {
             </Grid>
             <Grid item xs={12} sm={8}>
               <Item variant="outlined" elevation={0}>
-                <CommentsList commentsStore={commentsStore}/>
+                <CommentsList/>
               </Item>
             </Grid>
           </Grid>

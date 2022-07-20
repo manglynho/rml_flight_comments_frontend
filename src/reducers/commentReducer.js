@@ -4,6 +4,8 @@ const commentReducer = (state = [], action) => {
   switch(action.type) {
   case 'INIT_COMMENTS':
     return action.data
+  case 'RESET':
+    return []
   default:
     return state
   }
@@ -16,6 +18,14 @@ export const initializeComments = (selectedFlight) => {
     dispatch({
       type: 'INIT_COMMENTS',
       data: comments,
+    })
+  }
+}
+
+export const resetComments = () => {
+  return dispatch => {
+    dispatch({
+      type: 'RESET'
     })
   }
 }
