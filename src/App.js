@@ -12,9 +12,19 @@ import CommentForm from './components/CommentForm'
 import CommentsList from './components/CommentsList'
 
 import Notification from './components/Notification'
-import { styled, Grid, Paper, Box, AppBar, Toolbar, Typography, Divider, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import { Container, styled, Grid, Paper, Box, AppBar, Toolbar, Typography, FormControl, InputLabel, Select, MenuItem, CssBaseline } from '@mui/material'
 import AirlinesIcon from '@mui/icons-material/Airlines'
+import IconButton from '@mui/material/IconButton'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 
+import Accordion from '@mui/material/Accordion'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+
+
+import { createTheme, ThemeProvider  } from '@mui/material'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -25,13 +35,32 @@ const Item = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(2),
 }))
 
+// Define theme settings
+const light = {
+  palette: {
+    mode: 'light',
+  },
+}
+
+const dark = {
+  palette: {
+    mode: 'dark',
+  },
+}
+
+
 const App = () => {
+  const [isDarkTheme, setIsDarkTheme] = useState(false)
 
   const [users, setUsers] = useState([])
   const [flights, setFlights] = useState([])
   const [selectedFlight, setSelectedFlight] = useState(null)
   const dispatch = useDispatch()
   const commentsStore = useSelector(state => state.comments)
+
+  const changeTheme = () => {
+    setIsDarkTheme(!isDarkTheme)
+  }
 
   useEffect(() => {
     dispatch(initializeComments(selectedFlight))
@@ -70,58 +99,80 @@ const App = () => {
     }
   }
   return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" elevation={0}>
-          <Toolbar>
-            <AirlinesIcon />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-             Flight Comments
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </Box>
-      <Notification/>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <Item variant="outlined" elevation={0}>
+    <ThemeProvider theme={isDarkTheme ? createTheme(dark) : createTheme(light)}>
+      <CssBaseline />
+      <Container>
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar position="static" elevation={0}>
+            <Toolbar>
+              <AirlinesIcon />
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Select a flight
-                <FormControl sx={{ m: 1, width: '70%' }} size="small">
-                  <InputLabel id="select-flight-label">Flight</InputLabel>
-                  <Select
-                    labelId="select-flight-label"
-                    required
-                    id="flight-field"
-                    value={selectedFlight}
-                    name="flight"
-                    label="Flight"
-                    size="small"
-                    onChange={handleFlightChange}
+              Flight Comments
+              </Typography>
+              <IconButton sx={{ ml: 1 }} onClick={changeTheme} color="inherit">
+                {isDarkTheme ? <Brightness7Icon /> : <Brightness4Icon /> }
+              </IconButton>
+              {isDarkTheme ? 'Dark' : 'Light' }
+            </Toolbar>
+          </AppBar>
+        </Box>
+        <Notification/>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <Item variant="outlined" elevation={0}>
+                <Accordion expanded={true}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
                   >
-                    <MenuItem value={null}>All Flights</MenuItem>
-                    {flights.map(flight => (
-                      <MenuItem key={flight.id} value={flight.id}>{flight.flightNo} - {flight.airline}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Typography>
-              <Divider />
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Add a comment
-                <CommentForm createComment={addComment} flights={flights} users={users} />
-              </Typography>
-            </Item>
+                    <Typography>Select a flight</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <FormControl sx={{ m: 1, width: '70%' }} size="small">
+                      <InputLabel id="select-flight-label">Flight</InputLabel>
+                      <Select
+                        labelId="select-flight-label"
+                        required
+                        id="flight-field"
+                        value={selectedFlight}
+                        name="flight"
+                        label="Flight"
+                        size="small"
+                        onChange={handleFlightChange}
+                      >
+                        <MenuItem value={''}>All Flights</MenuItem>
+                        {flights.map(flight => (
+                          <MenuItem key={flight.id} value={flight.id}>{flight.flightNo} - {flight.airline}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel2a-content"
+                    id="panel2a-header"
+                  >
+                    <Typography>Add a comment</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <CommentForm createComment={addComment} flights={flights} users={users} />
+                  </AccordionDetails>
+                </Accordion>
+              </Item>
+            </Grid>
+            <Grid item xs={12} sm={8}>
+              <Item variant="outlined" elevation={0}>
+                <CommentsList commentsStore={commentsStore}/>
+              </Item>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={8}>
-            <Item variant="outlined" elevation={0}>
-              <CommentsList commentsStore={commentsStore}/>
-            </Item>
-          </Grid>
-        </Grid>
-      </Box>
-    </>
+        </Box>
+      </Container>
+    </ThemeProvider>
   )
 }
 export default App

@@ -35,6 +35,7 @@ const CommentsList = ({ commentsStore }) => {
     variant:'outlined',
     selectableRowsHeader: false,
     selectableRows: 'none',
+    responsive: 'standard'
   }
 
   return (

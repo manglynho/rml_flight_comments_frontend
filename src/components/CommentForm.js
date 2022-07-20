@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { Box, TextField, Button, FormControl, Select, MenuItem, InputLabel, OutlinedInput, InputAdornment, IconButton, FormHelperText } from '@mui/material'
+import { Box,  Button, FormControl, Select, MenuItem, InputLabel, OutlinedInput, InputAdornment, IconButton, FormHelperText } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 
 const validationSchema = yup.object().shape({
@@ -103,8 +103,9 @@ const CommentForm = ({ createComment, flights , users }) => {
         </Select>
         <FormHelperText id="select-user-helper-text">{formik.touched.user && formik.errors.user}</FormHelperText>
       </FormControl>
-      <FormControl>
-        <TextField
+      <FormControl sx={{ m: 1, width: '70%' }} size="small">
+        <InputLabel htmlFor="comment-field">Comment</InputLabel>
+        <OutlinedInput
           inputProps={{ 'data-testid': 'comment-field' }}
           id="comment-field"
           required
@@ -118,7 +119,7 @@ const CommentForm = ({ createComment, flights , users }) => {
           onChange={formik.handleChange}
           error={formik.touched.comment && Boolean(formik.errors.comment)}
         />
-        <FormHelperText id="select-user-helper-text">{formik.touched.comment && formik.errors.comment}</FormHelperText>
+        <FormHelperText id="comment-field">{formik.touched.comment && formik.errors.comment}</FormHelperText>
       </FormControl>
       <FormControl sx={{ m: 1, width: '70%' }} size="small">
         <InputLabel htmlFor="tags-field">Tags</InputLabel>
